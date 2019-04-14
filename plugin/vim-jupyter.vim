@@ -5,7 +5,7 @@ if !executable("j2p2j")
 endif
 
 " create view
-function! jpy#createView()
+function! vimJupyter#createView()
   let l:original_file = substitute(expand('%:p'), '\ ', '\\ ', 'g')
   let l:proxy_file = tempname() . "_" .expand('%:t')
 
@@ -28,7 +28,7 @@ function! jpy#createView()
 endfunction
 
 " Update ipynb when saving buffer
-function! jpy#updateNotebook()
+function! vimJupyter#updateNotebook()
   function! s:out_cb(ch, msg)
       echo a:msg
   endfunction
@@ -40,7 +40,7 @@ function! jpy#updateNotebook()
         \ 'out_cb': function('s:out_cb')})
 endfunction
 
-function! jpy#waitUntilSaved()
+function! vimJupyter#waitUntilSaved()
     if exists('s:save_flag') && s:save_flag !=? ''
       while job_status(s:save_flag) !~? 'dead'
       endwhile
@@ -48,13 +48,13 @@ function! jpy#waitUntilSaved()
 endfunction
 
 " commands
-command! -nargs=0 JpyUpdate call jpy#updateNotebook()
+command! -nargs=0 vimJupyterUpdate call vimJupyter#updateNotebook()
 
 " DEFINE AUTOCOMMANDS
-augroup jpyAutoCommands
+augroup vimJupyterAutoCommands
     au!
-    autocmd BufReadPost *.ipynb call jpy#createView()
-    autocmd BufNewFile *.ipynb call jpy#createView()
-    autocmd BufWritePost *.ipynb :JpyUpdate
-    autocmd VimLeavePre *.ipynb call jpy#waitUntilSaved()
+    autocmd BufReadPost *.ipynb call vimJupyter#createView()
+    autocmd BufNewFile *.ipynb call vimJupyter#createView()
+    autocmd BufWritePost *.ipynb :vimJupyterUpdate
+    autocmd VimLeavePre *.ipynb call vimJupyter#waitUntilSaved()
 augroup END
