@@ -5,7 +5,7 @@ if !executable("j2p2j")
 endif
 
 " create view
-function! vimJupyter#createView()
+function! vimjupyter()
   let l:original_file = substitute(expand('%:p'), '\ ', '\\ ', 'g')
   let l:proxy_file = tempname() . "_" .expand('%:t')
 
@@ -53,8 +53,8 @@ command! -nargs=0 vimJupyterUpdate call vimJupyter#updateNotebook()
 " DEFINE AUTOCOMMANDS
 augroup vimJupyterAutoCommands
     au!
-    autocmd BufReadPost *.ipynb call vimJupyter#createView()
-    autocmd BufNewFile *.ipynb call vimJupyter#createView()
+    autocmd BufReadPost *.ipynb call vimjupyter()
+    autocmd BufNewFile *.ipynb call vimjupyter()
     autocmd BufWritePost *.ipynb :vimJupyterUpdate
     autocmd VimLeavePre *.ipynb call vimJupyter#waitUntilSaved()
 augroup END
